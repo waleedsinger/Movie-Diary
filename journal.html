@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Movie Diary - Journal</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<!-- <body class="bg-gray-100 "> -->
+
+<body class="bg-indigo-600 bg-cover" style="background-image: url('./resources/Background.svg')">
+
+    <header class="bg-gray-800 shadow">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="text-2xl font-bold text-gray-200">The Movie Diary</div>
+                <div class="flex items-center">
+                    <a href="index.html" class="text-gray-200 mx-4 hover:text-indigo-400">Movies</a>
+                    <a href="journal.html" class="text-gray-200 mx-4 font-bold hover:text-indigo-400">Journal</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section>
+        <div class="px-6 py-6">
+            <h2 class="text-2xl text-gray-200 font-bold">Journal</h2>
+        </div>
+    </section>
+
+
+    <section class="container mx-auto px-6 py-16">
+        <!-- Grid Cointainer-->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8" id="card-container">
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2024 The Movie Diary</p>
+        </div>
+        </div>
+    </footer>
+    <script src="journal.js"></script>
+</body>
+
+</html>

@@ -27,9 +27,6 @@ async function fetchMovies(query = "") {
 }
 
 // Display movies in the card container
-// TODO: clean up: innerHTML should be replaced by createElements(..) methods; yellow heart button not color filled when not set as favorite;
-// notes button appear only on journal page
-// TODO: restructuring the displayMovies function, so that this function calls the fetchMovies function
 function displayMovies(movies) {
   movies.map((element) => {
     cardContainer.appendChild(createMovieCard(element));
@@ -68,6 +65,7 @@ function displayMovies(movies) {
   //     .join("");
 }
 
+// Creates the Movie Card
 function createMovieCard(movieObject) {
   const cardContainer = document.createElement("div");
   cardContainer.classList.add(
@@ -88,13 +86,9 @@ function createMovieCard(movieObject) {
     }
     else cardFavBtn.style = "background-image: url('./resources/icons8-stern-48-full.png')";
 
-    
-  let favToggle = false;
-
   cardFavBtn.addEventListener("click", (e) => {
     addToFavorites(movieObject);
     cardFavBtn.style = "background-image: url('./resources/icons8-stern-48-full.png')"
-    favToggle = true;
   });
 
   cardFavBtn.addEventListener("mouseover", (e) => {
@@ -102,7 +96,7 @@ function createMovieCard(movieObject) {
   });
 
   cardFavBtn.addEventListener("mouseout", (e) => {
-    if (!favToggle)
+    if (!favoritesArray.find((fav) => fav.id === movieObject.id))
     cardFavBtn.style = "background-image: url('./resources/icons8-stern-48.png')"
   });
 

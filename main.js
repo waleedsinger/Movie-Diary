@@ -1,10 +1,11 @@
-const apiKey = '434cdc6115c1cdc4355e3178cc63535a'; // Replace with your TMDB API key
+const apiKey = '434cdc6115c1cdc4355e3178cc63535a';
 const cardContainer = document.getElementById('card-container');
 const searchInput = document.getElementById('default-search');
 const searchButton = document.querySelector('button[type="submit"]');
-const favoriteKey = 'favoriteMovies'; // Key for localStorage
+const favoriteKey = 'favoriteMovies'; //
 
 // Fetch movies from TMDB API
+// TODO: the displayMovies function should call the fetchMovies function, not the other way around
 async function fetchMovies(query = '') {
     try {
         const url = query
@@ -16,13 +17,16 @@ async function fetchMovies(query = '') {
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        displayMovies(data.results);
+        displayMovies(data.results); 
     } catch (error) {
         console.error('Error fetching movies:', error);
     }
 }
 
 // Display movies in the card container
+// TODO: clean up: innerHTML should be replaced by createElements(..) methods; yellow heart button not color filled when not set as favorite;
+// notes button appear only on journal page
+// TODO: restructuring the displayMovies function, so that this function calls the fetchMovies function
 function displayMovies(movies) {
     cardContainer.innerHTML = movies.map(movie => `
         <div id="movie-${movie.id}" class="bg-gray-800 rounded-lg overflow-hidden shadow-lg relative">
@@ -52,6 +56,7 @@ searchButton.addEventListener('click', (e) => {
 });
 
 // Handle adding notes
+// TODO (for journal page): notes saved to corressponding movie in favorie list stored in localStorage
 function addNotePrompt(movieId) {
     const note = prompt('Add a note for this movie:');
     if (note) {
@@ -64,6 +69,8 @@ function addNotePrompt(movieId) {
 }
 
 // Handle adding to favorites
+// TODO: heart icon changes to a yellow filled heart
+// TODO: movieData that is stored should be an object consisting of the title and an unique id (the one that is already in the DB?)
 function addToFavorites(movieId) {
     const movieCard = document.getElementById(`movie-${movieId}`);
     if (movieCard) {

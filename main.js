@@ -6,7 +6,7 @@ const storageKey = "favoriteMovies"; //
 
 const favoritesArray = JSON.parse(localStorage.getItem(storageKey)) || [];
 
-// Fetch movies from TMDB API
+// Fetch movies from TMDB API; empty search leads back to popular movies
 async function fetchMovies(query = "") {
   try {
     const url = query
@@ -36,12 +36,6 @@ function displayMovies(movies) {
     cardContainer.appendChild(createMovieCard(element));
   });
 }
-
-//                (additional code for journal page MovieCards):
-//                 <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="addNotePrompt('${
-//                   movie.id
-//                 }')">Add Note</button>
-//                 <div id="notes-${movie.id}" class="mt-2 text-gray-300"></div>
 
 // Creates the Movie Card
 function createMovieCard(movieObject) {
@@ -122,24 +116,9 @@ function createMovieCard(movieObject) {
 // Handle search button click
 searchButton.addEventListener("click", (e) => {
   e.preventDefault();
-  const query = searchInput.value.trim();
-  if (query) {
-    fetchMovies(query);
-  }
+  const query = searchInput.value.trim();  
+  fetchMovies(query);
 });
-
-// Handle adding notes
-// TODO (for journal page): notes saved to corressponding movie in favorie list stored in localStorage
-function addNotePrompt(movieId) {
-  const note = prompt("Add a note for this movie:");
-  if (note) {
-    const notesDiv = document.getElementById(`notes-${movieId}`);
-    const noteElement = document.createElement("p");
-    noteElement.textContent = note;
-    noteElement.className = "p-1 bg-gray-700 rounded mb-1"; // Added styles for note visibility
-    notesDiv.appendChild(noteElement);
-  }
-}
 
 // Handle adding to favorites
 function addToFavorites(movieObject) {

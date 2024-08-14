@@ -28,42 +28,21 @@ async function fetchMovies(query = "") {
 
 // Display movies in the card container
 function displayMovies(movies) {
+  // Clearing cardContainer from previous items shown (elsewise it will just append the items searched for)
+  while (cardContainer.firstChild) {
+    cardContainer.removeChild(cardContainer.firstChild);
+  }
+
   movies.map((element) => {
     cardContainer.appendChild(createMovieCard(element));
   });
-
-  //   cardContainer.innerHTML = movies
-  //     .map(
-  //       (movie) => `
-  //         <div id="movie-${
-  //           movie.id
-  //         }" class="bg-gray-800 rounded-lg overflow-hidden shadow-lg relative">
-  //             <button class="absolute top-2 right-2 text-yellow-400 p-2 hover:text-yellow-500" title="Add to Favourites" onclick="addToFavorites('${
-  //               movie.id
-  //             }')">
-  //                 <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-  //                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-  //                 </svg>
-  //             </button>
-  //             <img class="w-full h-48 object-cover" src="https://image.tmdb.org/t/p/w500/${
-  //               movie.poster_path
-  //             }" alt="${movie.title}">
-  //             <div class="p-4">
-  //                 <h3 class="text-xl font-semibold mb-2">${movie.title}</h3>
-  //                 <p class="text-gray-400 mb-4">${movie.overview.substring(
-  //                   0,
-  //                   100
-  //                 )}...</p>
-  //                 <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="addNotePrompt('${
-  //                   movie.id
-  //                 }')">Add Note</button>
-  //                 <div id="notes-${movie.id}" class="mt-2 text-gray-300"></div>
-  //             </div>
-  //         </div>
-  //     `
-  //     )
-  //     .join("");
 }
+
+//                (additional code for journal page MovieCards):
+//                 <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="addNotePrompt('${
+//                   movie.id
+//                 }')">Add Note</button>
+//                 <div id="notes-${movie.id}" class="mt-2 text-gray-300"></div>
 
 // Creates the Movie Card
 function createMovieCard(movieObject) {
@@ -82,23 +61,28 @@ function createMovieCard(movieObject) {
   cardFavBtn.className =
     "absolute fill-current top-2 right-0.5 text-yellow-400 p-6 hover:text-yellow-500";
 
-    if (!favoritesArray.find((fav) => fav.id === movieObject.id)) {
-        cardFavBtn.style = "background-image: url('./resources/icons8-stern-48.png')";
-    }
-    else cardFavBtn.style = "background-image: url('./resources/icons8-stern-48-full.png')";
+  if (!favoritesArray.find((fav) => fav.id === movieObject.id)) {
+    cardFavBtn.style =
+      "background-image: url('./resources/icons8-stern-48.png')";
+  } else
+    cardFavBtn.style =
+      "background-image: url('./resources/icons8-stern-48-full.png')";
 
   cardFavBtn.addEventListener("click", (e) => {
     addToFavorites(movieObject);
-    cardFavBtn.style = "background-image: url('./resources/icons8-stern-48-full.png')"
+    cardFavBtn.style =
+      "background-image: url('./resources/icons8-stern-48-full.png')";
   });
 
   cardFavBtn.addEventListener("mouseover", (e) => {
-    cardFavBtn.style = "background-image: url('./resources/icons8-stern-48-full.png')"
+    cardFavBtn.style =
+      "background-image: url('./resources/icons8-stern-48-full.png')";
   });
 
   cardFavBtn.addEventListener("mouseout", (e) => {
     if (!favoritesArray.find((fav) => fav.id === movieObject.id))
-    cardFavBtn.style = "background-image: url('./resources/icons8-stern-48.png')"
+      cardFavBtn.style =
+        "background-image: url('./resources/icons8-stern-48.png')";
   });
 
   const cardImg = document.createElement("img");
@@ -121,7 +105,10 @@ function createMovieCard(movieObject) {
   const cardOverview = document.createElement("p");
   cardOverview.classList.add("mb-4", "text-indigo-200", "text-sm", "mt-6");
   // cardOverview.textContent = movieObject.overview;
-  (movieObject.overview.length > 150) ? (cardOverview.textContent = movieObject.overview.substring(0, 150) + "...") : cardOverview.textContent = movieObject.overview;
+  movieObject.overview.length > 150
+    ? (cardOverview.textContent =
+        movieObject.overview.substring(0, 150) + "...")
+    : (cardOverview.textContent = movieObject.overview);
 
   cardDetails.appendChild(cardHeader);
   cardDetails.appendChild(cardOverview);
@@ -156,8 +143,6 @@ function addNotePrompt(movieId) {
 }
 
 // Handle adding to favorites
-// TODO: heart icon changes to a yellow filled heart
-// TODO: movieData that is stored should be an object consisting of the title and an unique id (the one that is already in the DB?)
 function addToFavorites(movieObject) {
   const movieFav = {
     title: movieObject.title,

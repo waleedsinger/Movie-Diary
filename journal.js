@@ -6,7 +6,7 @@ const storageKey = "favoriteMovies";
 const favoritesArray = JSON.parse(localStorage.getItem(storageKey));
 
 // if favorites empty
-if (!favoritesArray)
+if (!favoritesArray || favoritesArray == [])
   gridSection.textContent = "Select your favorites on the Movies page";
 
 async function fetchById(movieId) {

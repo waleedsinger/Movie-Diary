@@ -73,7 +73,8 @@ function createMovieCard(movieObject) {
     "rounded-lg",
     "overflow-hidden",
     "shadow-lg",
-    "relative"
+    "relative",
+    "max-w-72"
   );
   cardContainer.id = movieObject.id;
 
@@ -101,7 +102,7 @@ function createMovieCard(movieObject) {
   });
 
   const cardImg = document.createElement("img");
-  cardImg.classList.add("w-full", "h-52", "object-scale-down");
+  cardImg.classList.add("max-w-72", "object-scale-down");
   cardImg.src = `https://image.tmdb.org/t/p/w500/${movieObject.poster_path}`;
   cardImg.alt = `Image of ${movieObject.title}`;
 
@@ -112,14 +113,15 @@ function createMovieCard(movieObject) {
   cardHeader.classList.add(
     "mb-2",
     "font-semibold",
-    "text-xl",
+    "text-lg",
     "text-indigo-300"
   );
   cardHeader.textContent = movieObject.title;
 
   const cardOverview = document.createElement("p");
-  cardOverview.classList.add("mb-4", "text-indigo-200");
-  cardOverview.textContent = movieObject.overview.substring(0, 100);
+  cardOverview.classList.add("mb-4", "text-indigo-200", "text-sm", "mt-6");
+  // cardOverview.textContent = movieObject.overview;
+  (movieObject.overview.length > 150) ? (cardOverview.textContent = movieObject.overview.substring(0, 150) + "...") : cardOverview.textContent = movieObject.overview;
 
   cardDetails.appendChild(cardHeader);
   cardDetails.appendChild(cardOverview);

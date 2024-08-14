@@ -49,11 +49,17 @@ function createMovieCard(movieObject) {
   cardFavBtn.style =
     "background-image: url('./resources/icons8-stern-48-full.png')";
 
-  // TODO: clicking on it deletes it right away from the journal page
   // Remove from journal when clicked
   cardFavBtn.addEventListener("click", () => {
-    removeFromFavorites(movieObject.id);
-    cardContainer.remove(); // Remove the card from the DOM
+    // Confirm before deletion
+    if (
+      confirm(
+        `Should the movie \"${movieObject.title}\" really removed from your favorites?`
+      )
+    ) {
+      removeFromFavorites(movieObject.id);
+      cardContainer.remove();
+    }
   });
 
   const cardImg = document.createElement("img");
@@ -76,16 +82,35 @@ function createMovieCard(movieObject) {
 
   // Note elements
   const cardNotes = document.createElement("p");
-  cardNotes.classList.add("mb-4", "text-indigo-200", "text-sm", "mt-6");
+  cardNotes.classList.add(
+    "mb-4",
+    "text-indigo-200",
+    "text-sm",
+    "mt-6",
+    "text-left"
+  );
   cardNotes.id = `notes-${movieObject.id}`;
+
+  // Check if there is already a note associated with the favorite movie item
+  if (
+    favoritesArray[
+      favoritesArray.findIndex((movie) => movie.id == movieObject.id)
+    ].note
+  ) {
+    cardNotes.textContent =
+      favoritesArray[
+        favoritesArray.findIndex((movie) => movie.id == movieObject.id)
+      ].note;
+  }
 
   const cardBtnAddNote = document.createElement("button");
   cardBtnAddNote.classList =
     "bg-indigo-800 text-indigo-200 px-4 py-2 rounded hover:bg-indigo-600 mt-2 mx-auto place-self-center self-center";
   cardBtnAddNote.textContent = "Add Note";
 
+  // Add Notes
   cardBtnAddNote.addEventListener("click", (e) => {
-    addNotePrompt(movieObject.id);
+    addNotePrompt(movieObject);
   });
 
   cardDetails.appendChild(cardHeader);
@@ -101,11 +126,17 @@ function createMovieCard(movieObject) {
 
 // Handle adding notes
 // TODO (for journal page): notes saved to corressponding movie in favorie list stored in localStorage
-function addNotePrompt(movieId) {
+function addNotePrompt(movieObject) {
   const note = prompt("Add a note for this movie:");
   if (note) {
-    const notes = document.getElementById(`notes-${movieId}`);
+    const notes = document.getElementById(`notes-${movieObject.id}`);
     notes.textContent = note;
+
+    favoritesArray[
+      favoritesArray.findIndex((movie) => movie.id == movieObject.id)
+    ].note = note;
+
+    localStorage.setItem(storageKey, JSON.stringify(favoritesArray));
   }
 }
 

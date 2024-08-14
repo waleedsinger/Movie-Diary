@@ -116,7 +116,7 @@ function createMovieCard(movieObject) {
 // Handle search button click
 searchButton.addEventListener("click", (e) => {
   e.preventDefault();
-  const query = searchInput.value.trim();  
+  const query = searchInput.value.trim();
   fetchMovies(query);
 });
 
@@ -131,8 +131,24 @@ function addToFavorites(movieObject) {
     localStorage.setItem(storageKey, JSON.stringify(favoritesArray));
     alert("Movie added to favorites!");
   } else {
-    alert("Movie is already in favorites.");
+    // Remove from storage when clicked
+    // Confirm before deletion
+    if (
+      confirm(
+        `Should the movie \"${movieObject.title}\" really removed from your favorites?`
+      )
+    ) {
+      removeFromFavorites(movieObject.id);
+    }
   }
+}
+
+function removeFromFavorites(movieId) {
+  favoritesArray.splice(
+    favoritesArray.findIndex((movie) => movie.id == movieId),
+    1
+  );
+  localStorage.setItem(storageKey, JSON.stringify(favoritesArray));
 }
 
 // Initialize by fetching popular movies

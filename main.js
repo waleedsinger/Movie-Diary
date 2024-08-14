@@ -18,7 +18,6 @@ async function fetchMovies(query = "") {
       throw new Error("Network response was not ok");
     }
     const data = await response.json();
-    console.log(data.results);
 
     displayMovies(data.results);
   } catch (error) {

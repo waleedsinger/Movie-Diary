@@ -25,7 +25,9 @@ async function fetchById(movieId) {
 }
 
 favoritesArray.forEach((element) => {
-  fetchById(element.id).then((movieObject) => cardContainer.appendChild(createMovieCard(movieObject)));
+  fetchById(element.id).then((movieObject) =>
+    cardContainer.appendChild(createMovieCard(movieObject))
+  );
 });
 
 // Creates the Journal Movie Card
@@ -44,27 +46,20 @@ function createMovieCard(movieObject) {
   const cardFavBtn = document.createElement("button");
   cardFavBtn.className =
     "absolute fill-current top-2 right-0.5 text-yellow-400 p-6 hover:text-yellow-500";
+  cardFavBtn.style =
+    "background-image: url('./resources/icons8-stern-48-full.png')";
 
-  // TODO: clicking on it deletes it right away from the journal page
-  if (!favoritesArray.find((fav) => fav.id === movieObject.id)) {
-    cardFavBtn.style =
-      "background-image: url('./resources/icons8-stern-48.png')";
-  } else
-    cardFavBtn.style =
-      "background-image: url('./resources/icons8-stern-48-full.png')";
-  cardFavBtn.addEventListener("click", (e) => {
-    addToFavorites(movieObject);
-    cardFavBtn.style =
-      "background-image: url('./resources/icons8-stern-48-full.png')";
-  });
-  cardFavBtn.addEventListener("mouseover", (e) => {
-    cardFavBtn.style =
-      "background-image: url('./resources/icons8-stern-48-full.png')";
-  });
-  cardFavBtn.addEventListener("mouseout", (e) => {
-    if (!favoritesArray.find((fav) => fav.id === movieObject.id))
-      cardFavBtn.style =
-        "background-image: url('./resources/icons8-stern-48.png')";
+  // Remove from journal when clicked
+  cardFavBtn.addEventListener("click", () => {
+    // Confirm before deletion
+    if (
+      confirm(
+        `Should the movie \"${movieObject.title}\" really removed from your favorites?`
+      )
+    ) {
+      removeFromFavorites(movieObject.id);
+      cardContainer.remove();
+    }
   });
 
   const cardImg = document.createElement("img");
@@ -73,38 +68,50 @@ function createMovieCard(movieObject) {
   cardImg.alt = `Image of ${movieObject.title}`;
 
   const cardDetails = document.createElement("div");
-  cardDetails.classList.add("p-4");
+  cardDetails.classList.add("p-4", "text-center");
 
   const cardHeader = document.createElement("h3");
   cardHeader.classList.add(
     "mb-2",
     "font-semibold",
     "text-lg",
-    "text-indigo-300"
+    "text-indigo-300",
+    "text-left"
   );
   cardHeader.textContent = movieObject.title;
 
   // Note elements
   const cardNotes = document.createElement("p");
-  cardNotes.classList.add("mb-4", "text-indigo-200", "text-sm", "mt-6");
+  cardNotes.classList.add(
+    "mb-4",
+    "text-indigo-200",
+    "text-sm",
+    "mt-6",
+    "text-left"
+  );
   cardNotes.id = `notes-${movieObject.id}`;
+
+  // Check if there is already a note associated with the favorite movie item
+  if (
+    favoritesArray[
+      favoritesArray.findIndex((movie) => movie.id == movieObject.id)
+    ].note
+  ) {
+    cardNotes.textContent =
+      favoritesArray[
+        favoritesArray.findIndex((movie) => movie.id == movieObject.id)
+      ].note;
+  }
 
   const cardBtnAddNote = document.createElement("button");
   cardBtnAddNote.classList =
-    "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600";
+    "bg-indigo-800 text-indigo-200 px-4 py-2 rounded hover:bg-indigo-600 mt-2 mx-auto place-self-center self-center";
   cardBtnAddNote.textContent = "Add Note";
 
+  // Add Notes
   cardBtnAddNote.addEventListener("click", (e) => {
-    addNotePrompt(movieObject.id);
+    addNotePrompt(movieObject);
   });
-
-  // Movie Card function....
-
-  //                (additional code for journal page MovieCards):
-  //                 <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="addNotePrompt('${
-  //                   movie.id
-  //                 }')">Add Note</button>
-  //                 <div id="notes-${movie.id}" class="mt-2 text-gray-300"></div>
 
   cardDetails.appendChild(cardHeader);
   cardDetails.appendChild(cardBtnAddNote);
@@ -119,11 +126,24 @@ function createMovieCard(movieObject) {
 
 // Handle adding notes
 // TODO (for journal page): notes saved to corressponding movie in favorie list stored in localStorage
-function addNotePrompt(movieId) {
+function addNotePrompt(movieObject) {
   const note = prompt("Add a note for this movie:");
   if (note) {
-    const notes = document.getElementById(`notes-${movieId}`);
+    const notes = document.getElementById(`notes-${movieObject.id}`);
     notes.textContent = note;
-    // notesElement.className = "p-1 bg-gray-700 rounded mb-1"; // Added styles for note visibility
+
+    favoritesArray[
+      favoritesArray.findIndex((movie) => movie.id == movieObject.id)
+    ].note = note;
+
+    localStorage.setItem(storageKey, JSON.stringify(favoritesArray));
   }
+}
+
+function removeFromFavorites(movieId) {
+  favoritesArray.splice(
+    favoritesArray.findIndex((movie) => movie.id == movieId),
+    1
+  );
+  localStorage.setItem(storageKey, JSON.stringify(favoritesArray));
 }
